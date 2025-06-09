@@ -195,15 +195,17 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <div className="brand-header shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Comic Relief Project Management
+            <h1 className="text-5xl font-bold mb-4 tracking-wide">
+              COMIC RELIEF
             </h1>
-            <p className="text-xl text-gray-600">
-              Streamlined project setup and management for Comic
-              Relief campaigns
+            <h2 className="text-2xl font-medium mb-3 opacity-90">
+              Project Management System
+            </h2>
+            <p className="text-lg opacity-80 max-w-2xl mx-auto">
+              Streamlined project setup and management for Comic Relief campaigns
             </p>
           </div>
         </div>
@@ -228,7 +230,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
         {/* Form Selection Cards - Now 3 cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {/* Quick Kick-off Form Card */}
-          <Card className="hover:shadow-lg transition-shadow border-2 border-green-200">
+          <Card className="card-hover border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-100 rounded-lg">
@@ -260,7 +262,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                 </div>
                 <Button
                   onClick={() => onNavigate("kickoff")}
-                  className="w-full bg-green-600 hover:bg-green-700"
+                  className="w-full bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
                   size="sm"
                 >
                   Create Jira Ticket
@@ -270,7 +272,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
           </Card>
 
           {/* Full Production Brief Card */}
-          <Card className="hover:shadow-lg transition-shadow border-2 border-blue-200">
+          <Card className="card-hover border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
@@ -301,7 +303,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                 </div>
                 <Button
                   onClick={() => onNavigate("original")}
-                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  className="w-full bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
                   size="sm"
                 >
                   Start Full Production Brief
@@ -311,7 +313,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
           </Card>
 
           {/* Data Request Brief Card */}
-          <Card className="hover:shadow-lg transition-shadow border-2 border-indigo-200">
+          <Card className="card-hover border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-indigo-100">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-indigo-100 rounded-lg">
@@ -343,7 +345,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                 </div>
                 <Button
                   onClick={() => handleDataRequest()}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
                   size="sm"
                 >
                   Request Data Analysis
@@ -386,7 +388,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
               return (
                 <Card
                   key={index}
-                  className="hover:shadow-lg transition-shadow h-full"
+                  className="card-hover h-full bg-gradient-to-br from-white to-gray-50"
                 >
                   <CardHeader>
                     <div className="flex items-start gap-3">
@@ -441,7 +443,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                   </p>
                   <Button
                     onClick={() => onNavigate("webhook-tester")}
-                    className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
                   >
                     Open Webhook Tester
                   </Button>

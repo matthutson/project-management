@@ -204,6 +204,58 @@
   }
 }
 
+/* Enhanced component styles for better UX */
+@layer components {
+  .card-hover {
+    transition: all 0.3s ease;
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-section {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-card);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .button-primary {
+    background: #e11d48;
+    color: white;
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.2s ease;
+  }
+  
+  .button-primary:hover {
+    background: #be123c;
+    transform: translateY(-1px);
+  }
+  
+  .input-enhanced {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    background: var(--color-input-background);
+    transition: all 0.2s ease;
+  }
+  
+  .input-enhanced:focus {
+    border-color: #e11d48;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+  }
+  
+  .brand-header {
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+    color: white;
+  }
+}
+
 html {
   font-size: var(--font-size);
 }
