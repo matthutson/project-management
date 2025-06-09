@@ -257,9 +257,9 @@ export function ComicReliefKickOffForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {/* Basic Information */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Basic Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -360,9 +360,9 @@ export function ComicReliefKickOffForm() {
           </Card>
 
           {/* Project Information */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Project Information</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Project Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -441,9 +441,9 @@ export function ComicReliefKickOffForm() {
           </Card>
 
           {/* Key Dates and Times */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Key Dates And Times</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Key Dates And Times</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -466,9 +466,9 @@ export function ComicReliefKickOffForm() {
           </Card>
 
           {/* Project Requirements */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Project Requirements</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Project Requirements</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -495,9 +495,9 @@ export function ComicReliefKickOffForm() {
           </Card>
 
           {/* Budget Information */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Budget Information</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Budget Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -557,9 +557,9 @@ export function ComicReliefKickOffForm() {
           </Card>
 
           {/* Talent Requirements */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Talent Requirements</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Talent Requirements</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -642,9 +642,9 @@ export function ComicReliefKickOffForm() {
           </Card>
 
           {/* Story Gathering */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Story Gathering</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Story Gathering</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -761,9 +761,9 @@ export function ComicReliefKickOffForm() {
           </Card>
 
           {/* Technical Requirements */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Technical Requirements</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Technical Requirements</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -810,9 +810,9 @@ export function ComicReliefKickOffForm() {
           </Card>
 
           {/* Supporting Documents */}
-          <Card>
+          <Card className="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
             <CardHeader>
-              <CardTitle>Supporting Documents</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-4">Supporting Documents</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
