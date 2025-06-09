@@ -23,7 +23,7 @@ import {
   submitWithRetry,
   generateEmailFallback,
 } from "../lib/webhook-test";
-// Image removed - will be added later
+import workflowImage from "figma:asset/be8c2e5f4b87c7c7a57b0a9a2e7f5c9d8e3f1a4b.png";
 
 interface LandingPageProps {
   onNavigate: (
@@ -195,30 +195,37 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2 uppercase tracking-wide">
-              COMIC RELIEF PROJECT MANAGEMENT
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Comic Relief Project Management
             </h1>
-            <p className="text-sm text-gray-600">
-              Streamlined project setup and management for Comic Relief campaigns
+            <p className="text-xl text-gray-600">
+              Streamlined project setup and management for Comic
+              Relief campaigns
             </p>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {/* Workflow Diagram */}
+        {/* Workflow Image - Using actual uploaded image */}
         <div className="mb-12">
-          <div className="w-full bg-white border border-gray-200 rounded-lg p-6">
-            <div className="text-center py-8">
-              <div className="text-sm text-gray-500 mb-2">
-                Comic Relief Project Workflow Diagram - Planning, Briefing, Design & Feedback, Delivery, Report
-              </div>
-              <div className="text-xs text-gray-400">
-                Comic Relief integrated workflow across 5 phases: Planning → Briefing → Design & Feedback → Delivery → Report
-              </div>
+          <div className="w-full bg-white border-2 border-gray-200 rounded-lg p-6">
+            <img
+              src={workflowImage}
+              alt="Comic Relief Project Workflow Diagram - Planning, Briefing, Design & Feedback, Delivery, Report"
+              className="w-full h-auto rounded-lg shadow-sm"
+              style={{
+                maxHeight: "600px",
+                objectFit: "contain",
+              }}
+            />
+            <div className="text-center mt-4 text-sm text-gray-600">
+              Comic Relief integrated workflow across 5 phases:
+              Planning → Briefing → Design & Feedback → Delivery
+              → Report
             </div>
           </div>
         </div>
@@ -226,7 +233,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
         {/* Form Selection Cards - Now 3 cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {/* Quick Kick-off Form Card */}
-          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-lg transition-shadow border-2 border-green-200">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-100 rounded-lg">
@@ -245,20 +252,20 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                <div className="bg-green-50 p-3 rounded-lg border border-green-200">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-gray-700 font-medium">
+                    <span className="text-green-700 font-medium">
                       ⚡ Quick Start
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-green-700">
                     Perfect for initial project setup and Jira
                     ticket creation
                   </p>
                 </div>
                 <Button
                   onClick={() => onNavigate("kickoff")}
-                  className="w-full bg-black hover:bg-gray-800 text-white"
+                  className="w-full bg-green-600 hover:bg-green-700"
                   size="sm"
                 >
                   Create Jira Ticket
@@ -268,7 +275,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
           </Card>
 
           {/* Full Production Brief Card */}
-          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-lg transition-shadow border-2 border-blue-200">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
@@ -299,7 +306,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                 </div>
                 <Button
                   onClick={() => onNavigate("original")}
-                  className="w-full bg-black hover:bg-gray-800 text-white"
+                  className="w-full bg-blue-600 hover:bg-blue-700"
                   size="sm"
                 >
                   Start Full Production Brief
@@ -309,7 +316,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
           </Card>
 
           {/* Data Request Brief Card */}
-          <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-lg transition-shadow border-2 border-indigo-200">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-indigo-100 rounded-lg">
@@ -341,7 +348,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                 </div>
                 <Button
                   onClick={() => handleDataRequest()}
-                  className="w-full bg-black hover:bg-gray-800 text-white"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700"
                   size="sm"
                 >
                   Request Data Analysis
@@ -384,7 +391,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
               return (
                 <Card
                   key={index}
-                  className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full"
+                  className="hover:shadow-lg transition-shadow h-full"
                 >
                   <CardHeader>
                     <div className="flex items-start gap-3">
@@ -439,7 +446,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                   </p>
                   <Button
                     onClick={() => onNavigate("webhook-tester")}
-                    className="bg-black hover:bg-gray-800 text-white"
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white"
                   >
                     Open Webhook Tester
                   </Button>

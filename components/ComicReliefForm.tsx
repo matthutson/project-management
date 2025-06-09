@@ -350,8 +350,8 @@ export function ComicReliefForm() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1>Full Production Brief</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2 uppercase tracking-wide">FULL PRODUCTION BRIEF</h1>
+        <p className="text-sm text-gray-600">
           Comprehensive project requirements for complex productions
         </p>
       </div>
@@ -1322,7 +1322,7 @@ export function ComicReliefForm() {
             <Button 
               type="submit" 
               disabled={isSubmitting}
-              className="min-w-[120px]"
+              className="min-w-[120px] bg-black hover:bg-gray-800 text-white"
             >
               {isSubmitting ? (
                 <>
@@ -1330,10 +1330,7 @@ export function ComicReliefForm() {
                   Submitting...
                 </>
               ) : (
-                <>
-                  <Send className="w-4 h-4 mr-2" />
-                  Submit Form
-                </>
+                "Submit Form"
               )}
             </Button>
           </div>

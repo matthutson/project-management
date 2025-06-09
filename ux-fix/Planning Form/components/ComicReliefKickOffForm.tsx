@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form@7.55.0"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Button } from "./ui/button"
@@ -10,8 +10,10 @@ import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
-import { toast } from "sonner"
+import { Separator } from "./ui/separator"
+import { toast } from "sonner@2.0.3"
 import { mapFormDataToJira } from "../lib/jira-field-mapping"
+import { Badge } from "./ui/badge"
 import { Loader2, Send, CheckCircle, AlertCircle } from "lucide-react"
 import { EpicSelector } from "./ProjectManagementComponents"
 
@@ -248,8 +250,8 @@ export function ComicReliefKickOffForm() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2 uppercase tracking-wide">QUICK KICK-OFF FORM</h1>
-        <p className="text-sm text-gray-600">
+        <h1>Quick Kick-off Form</h1>
+        <p className="text-muted-foreground">
           Provide initial project details for quick turnaround activities
         </p>
       </div>
@@ -839,7 +841,7 @@ export function ComicReliefKickOffForm() {
             <Button 
               type="submit" 
               disabled={isSubmitting}
-              className="min-w-[120px] bg-black hover:bg-gray-800 text-white"
+              className="min-w-[120px]"
             >
               {isSubmitting ? (
                 <>
@@ -847,7 +849,10 @@ export function ComicReliefKickOffForm() {
                   Submitting...
                 </>
               ) : (
-                "Submit Form"
+                <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Submit Form
+                </>
               )}
             </Button>
           </div>

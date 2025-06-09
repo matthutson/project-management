@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form@7.55.0"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Button } from "./ui/button"
@@ -10,9 +10,14 @@ import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
-import { toast } from "sonner"
+import { Checkbox } from "./ui/checkbox"
+import { Separator } from "./ui/separator"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
+import { toast } from "sonner@2.0.3"
 import { mapFormDataToJira } from "../lib/jira-field-mapping"
-import { Loader2, Send, CheckCircle, AlertCircle } from "lucide-react"
+import { Badge } from "./ui/badge"
+import { Loader2, Send, CheckCircle, AlertCircle, Check } from "lucide-react"
 import { EpicSelector } from "./ProjectManagementComponents"
 
 const formSchema = z.object({
@@ -69,6 +74,43 @@ const formSchema = z.object({
   }),
   techRequirements: z.string().optional(),
   
+  // Asset Requirements
+  requiresSpecificAssets: z.enum(["yes", "no"], {
+    required_error: "Please specify if specific assets are required"
+  }),
+  selectedAssetTypes: z.array(z.string()).optional(),
+  
+  // Asset Type Specific Fields (removed fields for deleted asset types)
+  videoApprovedCopy: z.string().optional(),
+  videoContentLocations: z.string().optional(),
+  videoDeliverables: z.string().optional(),
+  photographyApprovedCopy: z.string().optional(),
+  photographyContentLocations: z.string().optional(),
+  photographyDeliverables: z.string().optional(),
+  graphicDesignApprovedCopy: z.string().optional(),
+  graphicDesignContentLocations: z.string().optional(),
+  graphicDesignDeliverables: z.string().optional(),
+  printMaterialsApprovedCopy: z.string().optional(),
+  printMaterialsContentLocations: z.string().optional(),
+  printMaterialsDeliverables: z.string().optional(),
+  socialMediaContentApprovedCopy: z.string().optional(),
+  socialMediaContentContentLocations: z.string().optional(),
+  socialMediaContentDeliverables: z.string().optional(),
+  animationApprovedCopy: z.string().optional(),
+  animationContentLocations: z.string().optional(),
+  animationDeliverables: z.string().optional(),
+  
+  // Touchpoints
+  selectedTouchpoints: z.array(z.string()).optional(),
+  organicSocial: z.boolean().optional(),
+  dreamSocialChannels: z.array(z.string()).optional(),
+  socialPostDescription: z.string().optional(),
+  socialPurposeImpact: z.string().optional(),
+  webPages: z.boolean().optional(),
+  emails: z.boolean().optional(),
+  pr: z.boolean().optional(),
+  ads: z.boolean().optional(),
+  
   // Supporting Documents
   supportingDocuments: z.string().optional(),
 }).refine((data) => {
@@ -101,7 +143,28 @@ What action do we want our audiences to take? What's the core call-to-action and
 h2. Data Requirements
 Outline the data requirements you need to plan and measure your activity.`
 
-export function ComicReliefKickOffForm() {
+// Asset type options - removed the 6 specified types
+const ASSET_TYPE_OPTIONS = [
+  { label: "Video", value: "video" },
+  { label: "Photography", value: "photography" }, 
+  { label: "Graphic Design", value: "graphicDesign" },
+  { label: "Print Materials", value: "printMaterials" },
+  { label: "Social Media Content", value: "socialMediaContent" },
+  { label: "Animation", value: "animation" }
+]
+
+// Dream social channel options (specific to the touchpoints section)
+const DREAM_SOCIAL_CHANNEL_OPTIONS = [
+  "LinkedIn",
+  "Instagram", 
+  "Insta Stories",
+  "Facebook",
+  "YouTube",
+  "TikTok",
+  "YT Shorts"
+]
+
+export function ComicReliefForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
@@ -135,6 +198,17 @@ export function ComicReliefKickOffForm() {
       willBeUsedInAnotherAsset: "",
       requiresNewTechFunctionality: undefined,
       techRequirements: "",
+      requiresSpecificAssets: undefined,
+      selectedAssetTypes: [],
+      selectedTouchpoints: [],
+      organicSocial: false,
+      dreamSocialChannels: [],
+      socialPostDescription: "",
+      socialPurposeImpact: "",
+      webPages: false,
+      emails: false,
+      pr: false,
+      ads: false,
       supportingDocuments: "",
     },
   })
@@ -143,10 +217,39 @@ export function ComicReliefKickOffForm() {
   const requiresTalent = form.watch("requiresTalent")
   const requiresStoryGathering = form.watch("requiresStoryGathering")
   const requiresNewTechFunctionality = form.watch("requiresNewTechFunctionality")
+  const requiresSpecificAssets = form.watch("requiresSpecificAssets")
   const hasBudget = form.watch("hasBudget")
+
+  // Watch touchpoint values for visual indicators
+  const organicSocial = form.watch("organicSocial")
+  const webPages = form.watch("webPages")
+  const emails = form.watch("emails")
+  const pr = form.watch("pr")
+  const ads = form.watch("ads")
+
+  // Watch selected asset types
+  const selectedAssetTypes = form.watch("selectedAssetTypes") || []
 
   const handleEpicSelect = (epicKey: string) => {
     form.setValue("selectedEpicKey", epicKey)
+  }
+
+  const handleTouchpointToggle = (touchpoint: string, checked: boolean) => {
+    const currentTouchpoints = form.watch("selectedTouchpoints") || []
+    if (checked) {
+      form.setValue("selectedTouchpoints", [...currentTouchpoints, touchpoint])
+    } else {
+      form.setValue("selectedTouchpoints", currentTouchpoints.filter(t => t !== touchpoint))
+    }
+  }
+
+  const handleAssetTypeToggle = (assetType: string, checked: boolean) => {
+    const currentAssetTypes = form.watch("selectedAssetTypes") || []
+    if (checked) {
+      form.setValue("selectedAssetTypes", [...currentAssetTypes, assetType])
+    } else {
+      form.setValue("selectedAssetTypes", currentAssetTypes.filter(t => t !== assetType))
+    }
   }
 
   async function onSubmit(data: FormData) {
@@ -165,11 +268,11 @@ export function ComicReliefKickOffForm() {
       }
 
       // Map form data to Jira format
-      const jiraData = mapFormDataToJira(data, "Quick Kick-off Form")
+      const jiraData = mapFormDataToJira(data, "Full Production Brief")
       
       console.log('Submitting to webhook:', {
         url: WEBHOOK_URL,
-        formType: "Quick Kick-off Form",
+        formType: "Full Production Brief",
         jiraData: jiraData
       })
 
@@ -208,7 +311,7 @@ export function ComicReliefKickOffForm() {
       const operationType = data.hasPreviousBrief === "yes" ? "updated" : "created"
       const epicInfo = data.selectedEpicKey ? ` (Epic: ${data.selectedEpicKey})` : ""
       
-      toast.success(`Quick Kick-off Form submitted successfully! Epic ${operationType}${epicInfo}`)
+      toast.success(`Full Production Brief submitted successfully! Epic ${operationType}${epicInfo}`)
       
     } catch (error) {
       console.error("Submission error:", error)
@@ -226,7 +329,7 @@ export function ComicReliefKickOffForm() {
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h1>Quick Kick-off Form</h1>
+          <h1>Full Production Brief</h1>
           <p className="text-muted-foreground">Submitted successfully!</p>
         </div>
         
@@ -234,7 +337,7 @@ export function ComicReliefKickOffForm() {
           <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
           <h2 className="text-green-800 mb-2">Form Submitted Successfully!</h2>
           <p className="text-green-700 mb-4">
-            Your Quick Kick-off Form has been submitted and the Epic has been {operationType}
+            Your Full Production Brief has been submitted and the Epic has been {operationType}
             {epicKey && ` (${epicKey})`}.
           </p>
           <p className="text-green-600">
@@ -248,9 +351,9 @@ export function ComicReliefKickOffForm() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2 uppercase tracking-wide">QUICK KICK-OFF FORM</h1>
-        <p className="text-sm text-gray-600">
-          Provide initial project details for quick turnaround activities
+        <h1>Full Production Brief</h1>
+        <p className="text-muted-foreground">
+          Comprehensive project requirements for complex productions
         </p>
       </div>
 
@@ -809,6 +912,384 @@ export function ComicReliefKickOffForm() {
             </CardContent>
           </Card>
 
+          {/* Asset Requirements */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Asset Requirements</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="requiresSpecificAssets"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Does this project require specific assets? *</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select option" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="yes">Yes</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {requiresSpecificAssets === "yes" && (
+                <Accordion type="multiple" className="w-full">
+                  {ASSET_TYPE_OPTIONS.map((assetType) => (
+                    <AccordionItem key={assetType.value} value={assetType.value} className="mb-4">
+                      <AccordionTrigger className={`px-6 py-4 rounded-lg transition-colors ${
+                        selectedAssetTypes.includes(assetType.value) ? 'bg-blue-50 border border-blue-200' : 'bg-muted/20 hover:bg-muted/50'
+                      }`}>
+                        <div className="flex items-center gap-3">
+                          {selectedAssetTypes.includes(assetType.value) && <Check className="w-5 h-5 text-green-600" />}
+                          <span className="font-medium">{assetType.label}</span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 py-4 space-y-6 bg-white border border-gray-100 rounded-b-lg">
+                        <FormField
+                          control={form.control}
+                          name="selectedAssetTypes"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 mb-4">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(assetType.value)}
+                                  onCheckedChange={(checked) => {
+                                    handleAssetTypeToggle(assetType.value, !!checked)
+                                    return checked
+                                      ? field.onChange([...(field.value || []), assetType.value])
+                                      : field.onChange(field.value?.filter((value) => value !== assetType.value))
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                Include {assetType.label}
+                              </FormLabel>
+                            </FormItem>
+                          )}
+                        />
+
+                        {selectedAssetTypes.includes(assetType.value) && (
+                          <>
+                            <FormField
+                              control={form.control}
+                              name={`${assetType.value}ApprovedCopy` as keyof FormData}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{assetType.label} - Approved Copy</FormLabel>
+                                  <FormControl>
+                                    <Textarea 
+                                      placeholder={`Provide any approved copy for ${assetType.label.toLowerCase()}`}
+                                      className="min-h-[100px]"
+                                      {...field} 
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={form.control}
+                              name={`${assetType.value}ContentLocations` as keyof FormData}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{assetType.label} - Content Locations</FormLabel>
+                                  <FormControl>
+                                    <Textarea 
+                                      placeholder={`Where will this ${assetType.label.toLowerCase()} content be used?`}
+                                      className="min-h-[100px]"
+                                      {...field} 
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={form.control}
+                              name={`${assetType.value}Deliverables` as keyof FormData}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{assetType.label} - Deliverables</FormLabel>
+                                  <FormControl>
+                                    <Textarea 
+                                      placeholder={`List the specific ${assetType.label.toLowerCase()} deliverables needed`}
+                                      className="min-h-[150px]"
+                                      {...field} 
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </>
+                        )}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Touchpoints */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Touchpoints</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground mb-4">
+                Have you mapped out the user journey for this project? If so which of these touchpoints will the users see this content?
+              </p>
+              
+              <Tabs defaultValue="organic-social" className="w-full">
+                <TabsList className="grid w-full grid-cols-5">
+                  <TabsTrigger value="organic-social" className={`flex items-center gap-2 ${organicSocial ? 'bg-blue-100 border border-blue-300' : ''}`}>
+                    {organicSocial && <Check className="w-4 h-4 text-green-600" />}
+                    Organic Social
+                  </TabsTrigger>
+                  <TabsTrigger value="web-pages" className={`flex items-center gap-2 ${webPages ? 'bg-blue-100 border border-blue-300' : ''}`}>
+                    {webPages && <Check className="w-4 h-4 text-green-600" />}
+                    Web Pages
+                  </TabsTrigger>
+                  <TabsTrigger value="emails" className={`flex items-center gap-2 ${emails ? 'bg-blue-100 border border-blue-300' : ''}`}>
+                    {emails && <Check className="w-4 h-4 text-green-600" />}
+                    Emails
+                  </TabsTrigger>
+                  <TabsTrigger value="pr" className={`flex items-center gap-2 ${pr ? 'bg-blue-100 border border-blue-300' : ''}`}>
+                    {pr && <Check className="w-4 h-4 text-green-600" />}
+                    PR
+                  </TabsTrigger>
+                  <TabsTrigger value="ads" className={`flex items-center gap-2 ${ads ? 'bg-blue-100 border border-blue-300' : ''}`}>
+                    {ads && <Check className="w-4 h-4 text-green-600" />}
+                    Ads
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="organic-social" className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="organicSocial"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked)
+                              handleTouchpointToggle("organic-social", !!checked)
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Use this touchpoint
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+
+                  {organicSocial && (
+                    <>
+                      <div className="border rounded-lg p-4 bg-muted/30">
+                        <h4 className="mb-4 uppercase tracking-wide">Dream Social Channel</h4>
+                        
+                        <FormField
+                          control={form.control}
+                          name="dreamSocialChannels"
+                          render={({ field }) => (
+                            <FormItem>
+                              <div className="grid grid-cols-3 gap-4">
+                                {DREAM_SOCIAL_CHANNEL_OPTIONS.map((channel) => (
+                                  <FormItem key={channel} className="flex flex-row items-start space-x-3 space-y-0">
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field.value?.includes(channel)}
+                                        onCheckedChange={(checked) => {
+                                          return checked
+                                            ? field.onChange([...(field.value || []), channel])
+                                            : field.onChange(field.value?.filter((value) => value !== channel))
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormLabel className="text-sm font-normal uppercase tracking-wide">
+                                      {channel}
+                                    </FormLabel>
+                                  </FormItem>
+                                ))}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="socialPostDescription"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="uppercase tracking-wide">Describe The Post(s) You Require?</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="What do you want the post to tell users?"
+                                className="min-h-[120px]"
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="socialPurposeImpact"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="uppercase tracking-wide">Purpose And Impact:</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="What is this post for? How will it help our channels?"
+                                className="min-h-[120px]"
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="web-pages" className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="webPages"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked)
+                              handleTouchpointToggle("web-pages", !!checked)
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Use this touchpoint
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <p className="text-orange-800">
+                      This touchpoint is yet to be integrated into this brief, reach out to the individual channel holder for briefing details.
+                    </p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="emails" className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="emails"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked)
+                              handleTouchpointToggle("emails", !!checked)
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Use this touchpoint
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <p className="text-orange-800">
+                      This touchpoint is yet to be integrated into this brief, reach out to the individual channel holder for briefing details.
+                    </p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="pr" className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="pr"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked)
+                              handleTouchpointToggle("pr", !!checked)
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Use this touchpoint
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <p className="text-orange-800">
+                      This touchpoint is yet to be integrated into this brief, reach out to the individual channel holder for briefing details.
+                    </p>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="ads" className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="ads"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked)
+                              handleTouchpointToggle("ads", !!checked)
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Use this touchpoint
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <p className="text-orange-800">
+                      This touchpoint is yet to be integrated into this brief, reach out to the individual channel holder for briefing details.
+                    </p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+
           {/* Supporting Documents */}
           <Card>
             <CardHeader>
@@ -839,7 +1320,7 @@ export function ComicReliefKickOffForm() {
             <Button 
               type="submit" 
               disabled={isSubmitting}
-              className="min-w-[120px] bg-black hover:bg-gray-800 text-white"
+              className="min-w-[120px]"
             >
               {isSubmitting ? (
                 <>
@@ -847,7 +1328,10 @@ export function ComicReliefKickOffForm() {
                   Submitting...
                 </>
               ) : (
-                "Submit Form"
+                <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Submit Form
+                </>
               )}
             </Button>
           </div>
